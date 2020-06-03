@@ -3,7 +3,7 @@ const ctx = canvas.getContext('2d')
 
 const alive = true
 const dead = false
-const cellSize = 10 // cell size in pixel
+const cellSize = 4 // cell size in pixel
 const mapSize = {
     height: Math.floor(window.innerHeight / cellSize),
     width: Math.floor(window.innerWidth / cellSize),
@@ -126,4 +126,4 @@ function firstGeneration()
 }
 
 firstGeneration()
-setInterval(generationStep, 10)
+setInterval(generationStep, 200)
