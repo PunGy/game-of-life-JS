@@ -7,7 +7,25 @@
     <title>Life</title>
 </head>
 <body>
-    <canvas id="universe"></canvas>
+    <div id="container">
+        <canvas id="universe"></canvas>
+    </div>
+    <div id="controller-box">
+        <label for="speed">Step speed: <input type="number" id="speed" value="200"></label>
+        <button class="controll-button" id="edit-mode">
+            Start edit mode
+        </button>
+        <button class="controll-button" id="play">
+            Start
+        </button>
+        <label for="cell-size">Cell size: <input type="number" id="cell-size" value="4"></label>
+        <label for="with-grid">With grid: <input type="checkbox" id="with-grid"></label>
+        <span>
+            Generation step:
+            <span id="generation-step">0</span>
+        </span>
+    </div>
     <script src="index.js"></script>
+    <script src="controller.js"></script>
 </body>
 </html>

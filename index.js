@@ -1,35 +1,81 @@
 const canvas = document.getElementById('universe')
 const ctx = canvas.getContext('2d')
+const generationCounter = document.getElementById('generation-step')
 
 const alive = true
 const dead = false
-const cellSize = 4 // cell size in pixel
-const mapSize = {
-    height: Math.floor(window.innerHeight / cellSize),
-    width: Math.floor(window.innerWidth / cellSize),
-}
+let cellSize = 4 // cell size in pixel
+let currentGenerationStep = 0
+let withGrid = false
+
+const { innerHeight, innerWidth } = window
+let mapSize = calculateMapSize()
 canvas.width = mapSize.width * cellSize
 canvas.height = mapSize.height * cellSize
 
-/**
- * 2 dimentional array of cells
- * Cell is an boolean, which means alive(true), or dead(false)
- */
-let cells = Array.from(
-    { length: mapSize.width },
-    () => ( // map over x axis
-        Array.from(
-            { length: mapSize.height },
-            () => dead // map over y axis
-        )
-    ),
-)
+let cells = buildCellsArray()
 
+function calculateMapSize()
+{
+    return {
+        height: Math.floor((innerHeight - (innerHeight / 100 * 7)) / cellSize),
+        width: Math.floor(window.innerWidth / cellSize),
+    }
+}
+function buildCellsArray()
+{
+    /**
+     * 2 dimentional array of cells
+     * Cell is an boolean, which means alive(true), or dead(false)
+    */
+    return Array.from(
+        { length: mapSize.width },
+        () => ( // map over x axis
+            Array.from(
+                { length: mapSize.height },
+                () => dead // map over y axis
+            )
+        ),
+    )
+}
+
+function clearCanvas()
+{
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+}
+function restore()
+{
+    cells = buildCellsArray()
+    mapSize = calculateMapSize()
+    clearCanvas()
+    currentGenerationStep = 0
+    if (withGrid) drawGrid()
+}
+
+function drawGridCell(x, y)
+{
+    const xp = x * cellSize, yp = y * cellSize
+
+    ctx.beginPath()
+    ctx.moveTo(xp, yp)
+    
+    ctx.lineTo(xp + cellSize, yp)
+    ctx.lineTo(xp + cellSize, yp + cellSize)
+    ctx.lineTo(xp, yp + cellSize)
+    ctx.lineTo(xp, yp)
+    
+    ctx.strokeStyle = '#aaa'
+    ctx.lineWidth = 1
+    ctx.stroke()
+}
 function drawCell(x, y, isAlive)
 {
     if (isAlive === undefined) isAlive = cells[x][y]
+
     ctx.fillStyle = isAlive ? 'black' : 'white'
     ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize)
+    
+    if (withGrid) drawGridCell(x, y)
 }
 
 function getOffset(x, y) {
@@ -82,6 +128,12 @@ function getNextCellCondition(x, y, isAlive)
 }
 function generationStep()
 {
+    currentGenerationStep++
+    generationCounter.innerText = currentGenerationStep
+    if (currentGenerationStep === 23)
+    {
+        console.log(cells)
+    }
     return cells.forEach(
         (row, x) => (
             row.forEach((isAlive, y) => {
@@ -95,35 +147,66 @@ function generationStep()
     )
 }
 
-function firstGeneration()
+function drawGrid()
 {
-    cells[9][11] = alive
-    drawCell(9, 11)
-    cells[9][10] = alive
-    drawCell(9, 10)
-    cells[10][12] = alive
-    drawCell(10, 12)
-    cells[11][10] = alive
-    drawCell(11, 10)
-    cells[11][12] = alive
-    drawCell(11, 12)
-    cells[12][11] = alive
-    drawCell(12, 11)
-    cells[13][10] = alive
-    drawCell(13, 10)
-    cells[10][13] = alive
-    drawCell(10, 13)
-    cells[10][14] = alive
-    drawCell(10, 14)
-    cells[12][12] = alive
-    drawCell(12, 12)
-    cells[15][15] = alive
-    drawCell(15, 15)
-    cells[16][16] = alive
-    drawCell(16, 16)
-    cells[15][16] = alive
-    drawCell(15, 16)
+    const { width, height } = canvas
+    for (let x = cellSize; x <= width; x += cellSize)
+    {
+        ctx.beginPath()
+        ctx.moveTo(x, 0)
+        ctx.lineTo(x, height)
+        ctx.lineWidth = 1
+        ctx.strokeStyle = '#aaa'
+        ctx.stroke()
+    }
+    for (let y = cellSize; y <= height; y += cellSize)
+    {
+        ctx.beginPath()
+        ctx.moveTo(0, y)
+        ctx.lineTo(width, y)
+        ctx.lineWidth = 1
+        ctx.strokeStyle = '#aaa'
+        ctx.stroke()
+    }
+}
+function clearGrid()
+{
+    clearCanvas()
+    cells.forEach((col, x) => {
+        col.forEach((isAlive, y) => {
+            drawCell(x, y, isAlive)
+        })
+    })
 }
 
-firstGeneration()
-setInterval(generationStep, 200)
+function firstGeneration()
+{
+    cells[9 - 9][11 - 10] = alive
+    drawCell(9-9, 11-10)
+    cells[9-9][10-10] = alive
+    drawCell(9-9, 10-10)
+    cells[10-9][12-10] = alive
+    drawCell(10-9, 12-10)
+    cells[11-9][10-10] = alive
+    drawCell(11-9, 10-10)
+    cells[11-9][12-10] = alive
+    drawCell(11-9, 12-10)
+    cells[12-9][11-10] = alive
+    drawCell(12-9, 11-10)
+    cells[13-9][10-10] = alive
+    drawCell(13-9, 10-10)
+    cells[10-9][13-10] = alive
+    drawCell(10-9, 13-10)
+    cells[10-9][14-10] = alive
+    drawCell(10-9, 14-10)
+    cells[12-9][12-10] = alive
+    drawCell(12-9, 12-10)
+    cells[15-9][15-10] = alive
+    drawCell(15-9, 15-19)
+    cells[16-9][16-10] = alive
+    drawCell(16-9, 16-10)
+    cells[15-9][16-10] = alive
+    drawCell(15-9, 16-10)
+    currentGenerationStep++
+}
+
