@@ -4,7 +4,7 @@ const generationCounter = document.getElementById('generation-step')
 
 const alive = true
 const dead = false
-let cellSize = 4 // cell size in pixel
+let cellSize = +document.getElementById('cell-size').value // cell size in pixel
 let currentGenerationStep = 0
 let withGrid = false
 
@@ -37,45 +37,6 @@ function buildCellsArray()
             )
         ),
     )
-}
-
-function clearCanvas()
-{
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-}
-function restore()
-{
-    cells = buildCellsArray()
-    mapSize = calculateMapSize()
-    clearCanvas()
-    currentGenerationStep = 0
-    if (withGrid) drawGrid()
-}
-
-function drawGridCell(x, y)
-{
-    const xp = x * cellSize, yp = y * cellSize
-
-    ctx.beginPath()
-    ctx.moveTo(xp, yp)
-    
-    ctx.lineTo(xp + cellSize, yp)
-    ctx.lineTo(xp + cellSize, yp + cellSize)
-    ctx.lineTo(xp, yp + cellSize)
-    ctx.lineTo(xp, yp)
-    
-    ctx.strokeStyle = '#aaa'
-    ctx.lineWidth = 1
-    ctx.stroke()
-}
-function drawCell(x, y, isAlive)
-{
-    if (isAlive === undefined) isAlive = cells[x][y]
-
-    ctx.fillStyle = isAlive ? 'black' : 'white'
-    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize)
-    
-    if (withGrid) drawGridCell(x, y)
 }
 
 function getOffset(x, y) {
@@ -130,10 +91,6 @@ function generationStep()
 {
     currentGenerationStep++
     generationCounter.innerText = currentGenerationStep
-    if (currentGenerationStep === 23)
-    {
-        console.log(cells)
-    }
     return cells.forEach(
         (row, x) => (
             row.forEach((isAlive, y) => {
@@ -147,16 +104,55 @@ function generationStep()
     )
 }
 
+function clearCanvas()
+{
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+}
+function restore()
+{
+    cells = buildCellsArray()
+    mapSize = calculateMapSize()
+    clearCanvas()
+    currentGenerationStep = 0
+    if (withGrid) drawGrid()
+}
+
+function drawGridCell(x, y)
+{
+    const xp = x * cellSize, yp = y * cellSize
+
+    ctx.beginPath()
+    ctx.moveTo(xp, yp)
+    
+    ctx.lineTo(xp + cellSize, yp)
+    ctx.lineTo(xp + cellSize, yp + cellSize)
+    ctx.lineTo(xp, yp + cellSize)
+    ctx.lineTo(xp, yp)
+    
+    ctx.strokeStyle = '#aaa'
+    ctx.lineWidth = 1
+    ctx.stroke()
+}
+function drawCell(x, y, isAlive)
+{
+    if (isAlive === undefined) isAlive = cells[x][y]
+
+    ctx.fillStyle = isAlive ? 'black' : 'white'
+    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize)
+    
+    if (withGrid) drawGridCell(x, y)
+}
+
 function drawGrid()
 {
     const { width, height } = canvas
+    ctx.lineWidth = 1
+    ctx.strokeStyle = '#aaa'
     for (let x = cellSize; x <= width; x += cellSize)
     {
         ctx.beginPath()
         ctx.moveTo(x, 0)
         ctx.lineTo(x, height)
-        ctx.lineWidth = 1
-        ctx.strokeStyle = '#aaa'
         ctx.stroke()
     }
     for (let y = cellSize; y <= height; y += cellSize)
@@ -164,8 +160,6 @@ function drawGrid()
         ctx.beginPath()
         ctx.moveTo(0, y)
         ctx.lineTo(width, y)
-        ctx.lineWidth = 1
-        ctx.strokeStyle = '#aaa'
         ctx.stroke()
     }
 }
