@@ -13,8 +13,13 @@ let mapSize = calculateMapSize()
 canvas.width = mapSize.width * cellSize
 canvas.height = mapSize.height * cellSize
 
-let cells = buildCellsArray()
 
+let cells = buildCellsArray()
+let tempCells = buildCellsArray()
+
+/**
+ * Map size in cells
+ */
 function calculateMapSize()
 {
     return {
@@ -91,17 +96,26 @@ function generationStep()
 {
     currentGenerationStep++
     generationCounter.innerText = currentGenerationStep
-    return cells.forEach(
-        (row, x) => (
-            row.forEach((isAlive, y) => {
+    cells.forEach(
+        (col, x) => (
+            col.forEach((isAlive, y) => {
                 const nextState = getNextCellCondition(x, y, isAlive)
-                if (isAlive !== nextState) {
-                    drawCell(x, y, nextState)
-                    cells[x][y] = nextState
-                }
+                tempCells[x][y] = nextState
             })
         )
     )
+    endupStep()
+}
+function endupStep()
+{
+    tempCells.forEach((col, x) =>
+    {
+        col.forEach((isAlive, y) => 
+        {
+            drawCell(x, y, isAlive)
+            cells[x][y] = isAlive
+        })
+    })
 }
 
 function clearCanvas()
@@ -111,6 +125,7 @@ function clearCanvas()
 function restore()
 {
     cells = buildCellsArray()
+    tempCells = buildCellsArray()
     mapSize = calculateMapSize()
     clearCanvas()
     currentGenerationStep = 0

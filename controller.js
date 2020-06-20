@@ -60,8 +60,13 @@ withGridControll.addEventListener('change', () => {
 
 let isDrawing = false
 let drawMode = alive
-canvas.addEventListener('mousedown', () => {
+canvas.addEventListener('mousedown', ({ x: xp, y: yp }) => {
     isDrawing = true
+    const x = Math.floor(xp / cellSize),
+              y = Math.floor(yp / cellSize)
+
+    cells[x][y] = drawMode
+    drawCell(x, y, drawMode)
 })
 
 canvas.addEventListener('mousemove', ({ x: xp, y: yp }) => {
