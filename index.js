@@ -6,7 +6,7 @@ const alive = true
 const dead = false
 let cellSize = +document.getElementById('cell-size').value // cell size in pixel
 let currentGenerationStep = 0
-let withGrid = false
+let withGrid = document.getElementById('with-grid').checked
 
 const { innerHeight, innerWidth } = window
 let mapSize = calculateMapSize()
@@ -188,34 +188,4 @@ function clearGrid()
     })
 }
 
-function firstGeneration()
-{
-    cells[9 - 9][11 - 10] = alive
-    drawCell(9-9, 11-10)
-    cells[9-9][10-10] = alive
-    drawCell(9-9, 10-10)
-    cells[10-9][12-10] = alive
-    drawCell(10-9, 12-10)
-    cells[11-9][10-10] = alive
-    drawCell(11-9, 10-10)
-    cells[11-9][12-10] = alive
-    drawCell(11-9, 12-10)
-    cells[12-9][11-10] = alive
-    drawCell(12-9, 11-10)
-    cells[13-9][10-10] = alive
-    drawCell(13-9, 10-10)
-    cells[10-9][13-10] = alive
-    drawCell(10-9, 13-10)
-    cells[10-9][14-10] = alive
-    drawCell(10-9, 14-10)
-    cells[12-9][12-10] = alive
-    drawCell(12-9, 12-10)
-    cells[15-9][15-10] = alive
-    drawCell(15-9, 15-19)
-    cells[16-9][16-10] = alive
-    drawCell(16-9, 16-10)
-    cells[15-9][16-10] = alive
-    drawCell(15-9, 16-10)
-    currentGenerationStep++
-}
-
+if (withGrid) drawGrid()
