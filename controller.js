@@ -2,6 +2,7 @@ const playButton = document.getElementById('play')
 const speedControll = document.getElementById('speed')
 const cellSizeControll = document.getElementById('cell-size')
 const withGridControll = document.getElementById('with-grid')
+const clearModeControll = document.getElementById('clear-mode')
 
 let speed = parseInt(speedControll.value, 10)
 let intervalId
@@ -13,7 +14,6 @@ function isPlay()
 
 function startGeneration()
 {
-    if (currentGenerationStep === 0) firstGeneration()
     intervalId = setInterval(generationStep, speed)
     playButton.innerText = 'Stop'
 }
@@ -56,4 +56,30 @@ withGridControll.addEventListener('change', () => {
     withGrid = withGridControll.checked
     if (withGrid) drawGrid()
     else clearGrid()
+})
+
+let isDrawing = false
+let drawMode = alive
+canvas.addEventListener('mousedown', () => {
+    isDrawing = true
+})
+
+canvas.addEventListener('mousemove', ({ x: xp, y: yp }) => {
+    if (isDrawing)
+    {
+        const x = Math.floor(xp / cellSize),
+              y = Math.floor(yp / cellSize)
+
+        cells[x][y] = drawMode
+        drawCell(x, y, drawMode)
+    }
+})
+
+canvas.addEventListener('mouseup', () => {
+    isDrawing = false
+})
+
+
+clearModeControll.addEventListener('click', () => {
+    drawMode = !clearModeControll.checked
 })
