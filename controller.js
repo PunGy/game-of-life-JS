@@ -32,9 +32,9 @@ playButton.addEventListener('click', () =>
 speedControll.addEventListener('change', () =>
 {
     let nextSpeed = parseInt(speedControll.value, 10)
-    if (nextSpeed < 100)
+    if (nextSpeed < 0)
     {
-        nextSpeed = 100
+        nextSpeed = 0
         speedControll.value = nextSpeed
     }
 

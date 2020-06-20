@@ -132,30 +132,19 @@ function restore()
     if (withGrid) drawGrid()
 }
 
-function drawGridCell(x, y)
-{
-    const xp = x * cellSize, yp = y * cellSize
-
-    ctx.beginPath()
-    ctx.moveTo(xp, yp)
-    
-    ctx.lineTo(xp + cellSize, yp)
-    ctx.lineTo(xp + cellSize, yp + cellSize)
-    ctx.lineTo(xp, yp + cellSize)
-    ctx.lineTo(xp, yp)
-    
-    ctx.strokeStyle = '#aaa'
-    ctx.lineWidth = 1
-    ctx.stroke()
-}
 function drawCell(x, y, isAlive)
 {
     if (isAlive === undefined) isAlive = cells[x][y]
 
-    ctx.fillStyle = isAlive ? 'black' : 'white'
-    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize)
-    
-    if (withGrid) drawGridCell(x, y)
+    if (isAlive)
+    {
+        ctx.fillStyle = 'black'
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize - 1.2, cellSize - 1.2)
+    }
+    else
+    {
+        ctx.clearRect(x * cellSize, y * cellSize, cellSize - 1.2, cellSize - 1.2)
+    }
 }
 
 function drawGrid()
