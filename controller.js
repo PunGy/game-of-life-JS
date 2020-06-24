@@ -59,32 +59,33 @@ withGridControll.addEventListener('change', () => {
 })
 
 let isDrawing = false
-let drawMode = alive
-canvas.addEventListener('mousedown', ({ x: xp, y: yp }) => {
-    isDrawing = true
+let prevXY = {}
+function clickCell(xp, yp)
+{
     const x = Math.floor(xp / cellSize),
-              y = Math.floor(yp / cellSize)
+    y = Math.floor(yp / cellSize)
 
-    cells[x][y] = drawMode
-    drawCell(x, y, drawMode)
+    if (prevXY.x === x && prevXY.y === y) return
+    
+    const nextState = !cells[x][y]
+    cells[x][y] = nextState
+    prevXY.x = x
+    prevXY.y = y
+
+    drawCell(x, y, nextState)
+}
+canvas.addEventListener('mousedown', ({ x, y }) => {
+    isDrawing = true
+    clickCell(x, y)
 })
 
-canvas.addEventListener('mousemove', ({ x: xp, y: yp }) => {
+canvas.addEventListener('mousemove', ({ x, y }) => {
     if (isDrawing)
     {
-        const x = Math.floor(xp / cellSize),
-              y = Math.floor(yp / cellSize)
-
-        cells[x][y] = drawMode
-        drawCell(x, y, drawMode)
+        clickCell(x, y)
     }
 })
 
 canvas.addEventListener('mouseup', () => {
     isDrawing = false
-})
-
-
-clearModeControll.addEventListener('click', () => {
-    drawMode = !clearModeControll.checked
 })

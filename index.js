@@ -166,6 +166,8 @@ function drawGrid()
         ctx.lineTo(width, y)
         ctx.stroke()
     }
+    // sharpen cells
+    endupStep()
 }
 function clearGrid()
 {
