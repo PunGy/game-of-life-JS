@@ -124,9 +124,9 @@ function clearCanvas()
 }
 function restore()
 {
+    mapSize = calculateMapSize()
     cells = buildCellsArray()
     tempCells = buildCellsArray()
-    mapSize = calculateMapSize()
     clearCanvas()
     currentGenerationStep = 0
     if (withGrid) drawGrid()
